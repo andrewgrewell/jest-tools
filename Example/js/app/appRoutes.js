@@ -1,4 +1,6 @@
 import ScreenOne from './screens/ScreenOne';
+import ScreenTwo from './screens/ScreenTwo';
+import ScreenThree from './screens/ScreenThree';
 
 const appRoutes = [
     {
@@ -7,12 +9,12 @@ const appRoutes = [
         id: 1
     },
     {
-        Component: ScreenOne,
+        Component: ScreenTwo,
         linkText: 'Two',
         id: 2
     },
     {
-        Component: ScreenOne,
+        Component: ScreenThree,
         linkText: 'Three',
         id: 3
     }

@@ -5,7 +5,9 @@
     ],
     "globals": {
         "Promise": false,
-        "__DEV__": false
+        "__DEV__": false,
+        "describeAutomation": true,
+        "jestDeluxContext": true
     },
     "rules": {
         "comma-dangle": [ 2, "never" ],

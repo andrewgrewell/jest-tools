@@ -4,9 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "test:e2e": "jest --testMatch=\"**/*e2e.js\"",
+    "test:e2e:android": "E2E_PLATFORM=android npm run test:e2e",
+    "test:e2e:ios": "E2E_PLATFORM=ios npm run test:e2e"
   },
   "dependencies": {
+    "minimist": "^1.2.0",
     "prop-types": "^15.6.1",
     "react": "16.3.1",
     "react-native": "0.55.4"
@@ -15,7 +19,8 @@
     "babel-jest": "22.4.3",
     "babel-preset-react-native": "4.0.0",
     "jest": "22.4.3",
-    "react-test-renderer": "16.3.1"
+    "react-test-renderer": "16.3.1",
+    "wd": "^1.6.2"
   },
   "jest": {
     "preset": "react-native"

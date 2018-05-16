@@ -28,7 +28,8 @@ class Screen extends Component<Props> {
 
     render() {
         return (
-            <View style={[layoutStyles.fullView, this.props.screenBg]}>
+            <View style={[layoutStyles.fullView, this.props.screenBg]}
+                  accessibilityLabel={this.props.accessibilityLabel}>
                 <View style={[styles.header, this.props.headerBgColor]}>
                     <Text style={[textStyles.headerText, colorsStyles.light, this.props.headerTextColor]}>
                         {this.props.headerText}

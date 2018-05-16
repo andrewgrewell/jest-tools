@@ -18,7 +18,8 @@ type Link = {
 type Props = {
     links: Array<Link>,
     rowStyle: ViewPropTypes.style,
-    onLinkPress: PropTypes.func
+    onLinkPress: PropTypes.func,
+    activeLinkIndex: PropTypes.number
 }
 class NavigationRow extends Component<Props> {
     constructor(props) {
@@ -26,11 +27,12 @@ class NavigationRow extends Component<Props> {
         this.state = {};
     }
 
+    getActiveLinkStyle = (index) => index === this.props.activeLinkIndex ? styles.activeLink : null;
     renderNavButtons = () => {
         return this.props.links.map((link, i) => {
             return (
                 <TouchableOpacity key={i} onPress={() => this.props.onLinkPress(i)}>
-                    <View style={styles.link}>
+                    <View style={[styles.link, this.getActiveLinkStyle(i)]} accessibilityLabel={`navigationLink:${i + 1}`}>
                         <Text>{link.linkText}</Text>
                     </View>
                 </TouchableOpacity>

@@ -8,6 +8,12 @@ export default StyleSheet.create({
         justifyContent: 'space-around'
     },
     link: {
+        minWidth: 75,
+        padding: 5,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    activeLink: {
         borderBottomWidth: 1,
         borderBottomColor: '#757575'
     }

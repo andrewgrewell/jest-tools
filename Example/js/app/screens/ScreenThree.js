@@ -1,6 +1,6 @@
 import React from 'react';
 import colorsStyles from '../styles/colorStyles';
-import Screen from '../component/Screen';
+import Screen from '../components/Screen';
 
 const ScreenThree = () => (
     <Screen headerText="Screen Three"
