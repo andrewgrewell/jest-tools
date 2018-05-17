@@ -1,6 +1,8 @@
 const logMessage = require('../util/logMessage');
 const flatten = require('lodash/flatten');
 const config = require('../config');
+const readDirectoryFiles = require('../util/readDirectoryFiles');
+const path = require('path');
 // const inquirer = require('inquirer');
 // const exec = require('child_process').exec;
 
@@ -8,12 +10,30 @@ const config = require('../config');
 class CustomReporter {
 
     onRunComplete(contexts, testResult) {
-        //parseScreenCheckResults();
+        let jestScreenCheckResults = parseJestResults(testResult);
+        let screenCheckResults = parseScreenCheckResults();
     }
 }
 
+function parseJestResults(jestResult) {
+    let screenCheckResults = flatten(jestResult.testResults.map(suiteResult => suiteResult.testResults))
+        .reduce((result, tr) => {
+            if (/\[ScreenChecker\]/.test(tr.title)) {
+                let match = tr.title.match(/\[ScreenChecker\] (.+) looks as expected/);
+                if (match) {
+                    result[match[1]] = tr;
+                }
+            }
+            return result;
+        }, {});
+    //console.log('Screen check results: ', screenCheckResults);
+}
+
 function parseScreenCheckResults() {
-    let screenCheckResults = '';
+    readDirectoryFiles(path.resolve(config.outputPath, './screenshots'))
+        .then((screenCheckResults) => {
+            console.log('screen check results: ', screenCheckResults);
+        });
     // inquirer.prompt([
     //     {
     //         name: 'test',

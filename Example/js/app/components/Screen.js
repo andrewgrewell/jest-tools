@@ -35,6 +35,7 @@ class Screen extends Component<Props> {
                         {this.props.headerText}
                     </Text>
                 </View>
+                {this.props.children}
             </View>
         );
     }

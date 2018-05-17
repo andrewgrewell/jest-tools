@@ -1,9 +1,6 @@
 import { PNG } from 'pngjs';
-import fs from 'fs';
-import pixelmatch from 'pixelmatch';
-import ensureScreenshotsExists from './ensureScreenshotsExists';
+import ensureBaselineExists from './ensureBaselineExists';
 import parseScreenshot from './parseScreenshot';
-import getScreenshotPath from './getScreenshotPath';
 import writeResults from './writeScreenCheckResults';
 import writeScreenshot from './writeScreenshot';
 import removeScreenshot from './removeScreenshot';
@@ -12,14 +9,14 @@ import getScreenshotsPixelDiff from './getScreenshotsPixelDiff';
 
 const defaultOpts = {
     warnThreshold: 0.001,
-    failThreshold: 0.01,
+    failThreshold: 0.005,
     threshold: 0.1
 };
 
 
 export default async function compareScreenshots(driver, opts) {
     opts = Object.assign({}, defaultOpts, opts);
-    let baselineExists = await ensureScreenshotsExists(opts.name);
+    let baselineExists = await ensureBaselineExists(opts.name);
     let screenshot = await driver.takeScreenshot();
     if (!baselineExists) {
         await writeScreenshot(opts.name, 'baseline', screenshot);
@@ -27,7 +24,7 @@ export default async function compareScreenshots(driver, opts) {
             ...opts,
             pxDiff: 0,
             percentDiff: 0,
-            status: 'passed'
+            status: 'skipped'
         });
         return true;
     }
@@ -44,20 +41,21 @@ export default async function compareScreenshots(driver, opts) {
         pxDiff,
         percentDiff
     };
-    if (percentDiff > opts.warnThreshold) {
-        await writeResults({
-            ...baseResults,
-            status: 'warn'
-        });
-        return true;
-    }
-    if (percentDiff > (opts.failThreshold)) {
+    if (percentDiff > opts.failThreshold) {
         await writeScreenshotDiff(opts.name, diff);
         await writeResults({
             ...baseResults,
             status: 'fail'
         });
         return false;
+    }
+    else if (percentDiff > opts.warnThreshold) {
+        await writeScreenshotDiff(opts.name, diff);
+        await writeResults({
+            ...baseResults,
+            status: 'warn'
+        });
+        return true;
     }
     removeScreenshot(opts.name, 'latest');
     await writeResults({

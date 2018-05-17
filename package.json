@@ -1,4 +1,23 @@
 {
+  "name": "jest-tools",
+  "version": "0.0.1",
+  "author": "Andrew Grewell <andrewgrewell@gmail.com>",
+  "description": "a library to take your test to the next level",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrewgrewell/jest-tools.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react-native",
+    "react",
+    "jest",
+    "jest tool",
+    "javascript",
+    "unit testing",
+    "integration testing",
+    "automation testing"
+  ],
   "devDependencies": {
     "babel-eslint": "^8.2.3",
     "eslint": "^4.19.1"
