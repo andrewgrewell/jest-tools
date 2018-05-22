@@ -6,16 +6,11 @@ import writeScreenshot from './writeScreenshot';
 import removeScreenshot from './removeScreenshot';
 import writeScreenshotDiff from './writeScreenshotDiff';
 import getScreenshotsPixelDiff from './getScreenshotsPixelDiff';
-
-const defaultOpts = {
-    warnThreshold: 0.001,
-    failThreshold: 0.005,
-    threshold: 0.1
-};
+import config from '../config';
 
 
 export default async function compareScreenshots(driver, opts) {
-    opts = Object.assign({}, defaultOpts, opts);
+    opts = Object.assign({}, config.screenCheckerOptions, opts);
     let baselineExists = await ensureBaselineExists(opts.name);
     let screenshot = await driver.takeScreenshot();
     if (!baselineExists) {

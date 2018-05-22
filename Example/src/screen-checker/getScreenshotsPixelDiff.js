@@ -9,7 +9,7 @@ export default function getScreenshotsPixelDiff(baseline, latest, diff, opts) {
         baseline.width,
         baseline.height,
         {
-            threshold: opts.threshold
+            threshold: opts.screenshotSensitivity
         }
     );
 }

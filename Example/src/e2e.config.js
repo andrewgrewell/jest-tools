@@ -20,7 +20,6 @@ const e2eConfig = {
                 deviceName: 'iPhone Simulator',
                 automationName: 'XCUITest',
                 iosInstallPause: 1000,
-                // TODO setup fastlane to build simulator builds and place them in the e2e directory
                 app: process.cwd() + '/ios/build/Build/Products/Debug-iphonesimulator/Example.app'
             };
             case 'android': return {

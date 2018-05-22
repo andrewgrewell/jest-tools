@@ -11,14 +11,14 @@ const ScreenOne = () => (
             accessibilityLabel="screenOne"
             headerBgColor={colorsStyles.bgPurple}
             headerTextColor={colorsStyles.light}>
-        {/*<View>*/}
-            {/*<Text>*/}
-                {/*Some new text*/}
-            {/*</Text>*/}
-            {/*<Text>*/}
-                {/*Some more new text*/}
-            {/*</Text>*/}
-        {/*</View>*/}
+        <View>
+            <Text>
+                Some new text
+            </Text>
+            <Text>
+                Some more new text
+            </Text>
+        </View>
     </Screen>
 );
 

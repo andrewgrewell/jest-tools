@@ -1,0 +1,11 @@
+{
+    "outputPath": "/Users/osi/development/packages/jest-tools/Example/js/tests/screen-check",
+    "setupFrameworkFiles": [],
+    "reporterOptions": {
+        "verbose": false
+    },
+    "screenCheckerOptions": {
+        "warnThreshold": 0.003,
+        "failThreshold": 0.005
+    }
+}

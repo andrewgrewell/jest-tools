@@ -7,7 +7,7 @@ describeAutomation('Critical Path', (driver, { screenChecker }) => {
     });
 
     screenChecker
-        .waitForElement('screenTwo')
+        .waitMs(1000)
         .checkScreen('ScreenTwo');
 
     test('can navigate to page three', async () => {
