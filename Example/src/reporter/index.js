@@ -1,45 +1,69 @@
+const path = require('path');
+const exec = require('child_process').exec;
 const fs = require('fs');
 const flatten = require('lodash/flatten');
-const some = require('lodash/some');
+const filter = require('lodash/filter');
 const config = require('../config');
 const readDirectoryFiles = require('../util/readDirectoryFiles');
-const path = require('path');
-// const inquirer = require('inquirer');
-// const exec = require('child_process').exec;
+const removeScreenshot = require('../screen-checker/removeScreenshot');
+const inquirer = require('inquirer');
 
 
 class CustomReporter {
 
     onRunComplete(contexts, testResult) {
-        let jestScreenCheckResults = parseJestResults(testResult);
-        parseScreenCheckResults(jestScreenCheckResults)
+        parseScreenCheckResults(parseJestResults(testResult))
             .then((screenCheckResults) => {
+                logBanner();
                 logResults(screenCheckResults);
-
-                if (some(screenCheckResults, result => result.status !== 'pass')) {
+                let nonPassingResults = filter(screenCheckResults, result => result.status !== 'pass');
+                if (nonPassingResults.length) {
                     // show inquirerer prompt for non passing screen checks
-                    console.log('show inquirer prompt to fix screens');
+                    inquirer.prompt([
+                        {
+                            name: 'shouldContinue',
+                            type: 'list',
+                            choices: [{ name: 'Yes', value: 1 }, { name: 'No, update all baselines', value: 1 }],
+                            message: 'Screens have changed, would you like to review?'
+                        }
+                    ]).then(({ shouldContinue }) => {
+                        if (!shouldContinue) {
+                            console.log('update all baselines...');
+                        }
+                        else {
+                            promptUpdateResults(nonPassingResults)
+                                .then(() => {
+                                    console.log('all prompts finished');
+                                });
+                        }
+                    });
                 }
             });
     }
 }
 
-function logResults(screenCheckResults) {
+function logBanner() {
     console.log('\x1b[36m', '---------------------------------');
     console.log('\x1b[36m', '       Screen Check Results      ');
     console.log('\x1b[36m', '---------------------------------', '\x1b[0m');
+}
+function logResults(screenCheckResults) {
     screenCheckResults.forEach((result) => {
-        logStatus(result.name, result.status);
-        if (result.status === 'pass' && !config.reporterOptions.verbose) {
-            return;
-        }
-        console.log(`  • Screenshot Sensitivity: ${result.screenshotSensitivity}`);
-        console.log(`  • Warn Threshold: ${result.warnThreshold}`);
-        console.log(`  • Fail Threshold: ${result.failThreshold}`);
-        console.log(`  • Percent Change: ${result.percentDiff}`);
-        console.log(`  • Pixel Change: ${result.pxDiff}`);
-        console.log('____________________');
+        logResultInfo(result);
     });
+}
+
+function logResultInfo(result, verbose) {
+    logStatus(result.name, result.status);
+    if (!verbose) {
+        return;
+    }
+    console.log(`  • Screenshot Sensitivity: ${result.screenshotSensitivity}`);
+    console.log(`  • Warn Threshold: ${result.warnThreshold}`);
+    console.log(`  • Fail Threshold: ${result.failThreshold}`);
+    console.log(`  • Percent Change: ${result.percentDiff}`);
+    console.log(`  • Pixel Change: ${result.pxDiff}`);
+    console.log('____________________');
 }
 
 function logStatus(name, status) {
@@ -82,16 +106,107 @@ function parseScreenCheckResults(jestScreenCheckResults) {
                 return result;
             });
         });
-    // inquirer.prompt([
-    //     {
-    //         name: 'test',
-    //         type: 'input',
-    //         message: 'Screen Check Failed for TestScreen\nWould you like to update?'
-    //     }
-    // ]).then(answers => {
-    //     console.log('go through and update shots accordingly');
-    //     exec(`open /Users/osi/development/packages/react-native-jest/Example/src/screen-checker/screenshots/ScreenTwo/baseline.png`)
-    // });
+}
+
+function promptUpdateResults(nonPassingResults) {
+    return prompt(makePrompter(nonPassingResults));
+}
+
+function * makePrompter(nonPassingResults) {
+    for (let result of nonPassingResults) {
+        yield promptUpdateResult(result);
+    }
+}
+
+function prompt(prompter, rootResolve) {
+    return new Promise((resolve, reject) => {
+        let currentPrompt = prompter.next();
+        if (currentPrompt.done) {
+            rootResolve();
+        }
+        else {
+            currentPrompt.value.then(() => prompt(prompter, rootResolve || resolve));
+        }
+    });
+}
+
+function promptUpdateResult(result, opts = { verbose: true }) {
+    return new Promise((resolve, reject) => {
+        logResultInfo(result, opts.verbose);
+        inquirer.prompt([
+            {
+                name: 'action',
+                type: 'list',
+                choices: [{
+                    name: 'View Diff',
+                    value: 1
+                }, {
+                    name: 'View Baseline',
+                    value: 2
+                }, {
+                    name: 'View Latest',
+                    value: 3
+                }, {
+                    name: 'Update Baseline',
+                    value: 4
+                }, {
+                    name: 'Confirm Regression',
+                    value: 5
+                }],
+                message: 'Select an action'
+            }
+        ]).then(({ action }) => {
+            let promiseAction;
+            switch (action) {
+                case 1: openImage(result.name, 'diff'); break;
+                case 2: openImage(result.name, 'baseline'); break;
+                case 3: openImage(result.name, 'latest'); break;
+                case 4: promiseAction = updateBaseline(result.name); break;
+                case 5: promiseAction = removeNonBaseline(result.name); break;
+            }
+            if (action === 4 || action === 5) {
+                promiseAction.then(() => {
+                    opts.resolve ? opts.resolve() : resolve();
+                });
+            }
+            else {
+                promptUpdateResult(result, {
+                    verbose: true,
+                    resolve
+                });
+            }
+        });
+    });
+}
+
+function openImage(screenName, type) {
+    exec(`open ${config.outputPath}/screenshots/${screenName}/${type}.png`);
+}
+
+function removeNonBaseline(name) {
+    return removeScreenshot(name, 'latest')
+        .then(() => {
+            removeScreenshot(name, 'diff');
+        });
+}
+
+function updateBaseline(name) {
+    const makePath = (type) => `${config.outputPath}/screenshots/${name}/${type}.png`;
+    return new Promise((resolve, reject) => {
+        Promise.resolve()
+            .then(() => removeScreenshot(name, 'baseline'))
+            .then(() => removeScreenshot(name, 'diff'))
+            .then(() => {
+                fs.rename(makePath('latest'), makePath('baseline'), (err) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve();
+                });
+            })
+            .catch((err) => reject(err));
+    });
+
 }
 
 

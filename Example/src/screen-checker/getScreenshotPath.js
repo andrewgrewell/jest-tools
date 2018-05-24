@@ -1,6 +1,9 @@
-import path from 'path';
-import config from '../config';
+const path = require('path');
+const config = require('../config');
 
-export default function getScreenshotPath(name, type) {
+function getScreenshotPath(name, type) {
     return `${path.resolve(config.outputPath)}/screenshots/${name}/${type}.png`;
 }
+
+
+module.exports = getScreenshotPath;

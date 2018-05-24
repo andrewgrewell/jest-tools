@@ -1,7 +1,7 @@
-import fs from 'fs';
-import getScreenshotPath from './getScreenshotPath';
+const fs = require('fs');
+const getScreenshotPath = require('./getScreenshotPath');
 
-export default function removeScreenshot(name, type) {
+function removeScreenshot(name, type) {
     return new Promise((resolve, reject) => {
         fs.unlink(getScreenshotPath(name, type), (err) => {
             if (err) {
@@ -11,3 +11,6 @@ export default function removeScreenshot(name, type) {
         });
     });
 }
+
+
+module.exports = removeScreenshot;

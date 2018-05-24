@@ -5,7 +5,7 @@
         "verbose": false
     },
     "screenCheckerOptions": {
-        "warnThreshold": 0.003,
+        "warnThreshold": 0.001,
         "failThreshold": 0.005
     }
 }
