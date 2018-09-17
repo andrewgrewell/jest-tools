@@ -1,15 +1,10 @@
 import wd from 'wd';
-import e2eConfig from './e2e.config';
+import wdConfig from './wd.config';
 import ScreenChecker from './screen-checker';
 import config from './config';
-const driver = wd.promiseChainRemote(e2eConfig.url, e2eConfig.port);
 
-const defaultOpts = Object.assign({
-    automationTimeout: 60000,
-    waitTimeout: 10000,
-    resetAfterEach: false,
-    remainOpenAfterRunning: false
-}, config);
+const driver = wd.promiseChainRemote(wdConfig.url, wdConfig.port);
+const defaultOpts = config.testOptions;
 
 
 global.describeAutomation = (suiteName, testSuite, opts) => {
@@ -18,7 +13,14 @@ global.describeAutomation = (suiteName, testSuite, opts) => {
         jest.setTimeout(opts.automationTimeout);
 
         beforeAll(async () => {
-            await driver.init(e2eConfig.device);
+            try {
+                await driver.init(wdConfig.device);
+            }
+            catch (err) {
+                console.error('Error Initializing Driver', 'error');
+                let error = JSON.parse(err.data);
+                error && console.error(error.value.message);
+            }
             await driver.setImplicitWaitTimeout(opts.waitTimeout);
         });
 

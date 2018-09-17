@@ -7,23 +7,23 @@ const config = require('../config');
 const readDirectoryFiles = require('../util/readDirectoryFiles');
 const removeScreenshot = require('../screen-checker/removeScreenshot');
 const inquirer = require('inquirer');
+const logMessage = require('../util/logMessage');
 
 
 class CustomReporter {
-
     onRunComplete(contexts, testResult) {
         parseScreenCheckResults(parseJestResults(testResult))
             .then((screenCheckResults) => {
                 logBanner();
                 logResults(screenCheckResults);
-                let nonPassingResults = filter(screenCheckResults, result => result.status !== 'pass');
+                let nonPassingResults = filter(screenCheckResults, result => result.status !== 'pass' && result.status !== 'skipped');
                 if (nonPassingResults.length) {
                     // show inquirerer prompt for non passing screen checks
                     inquirer.prompt([
                         {
                             name: 'shouldContinue',
                             type: 'list',
-                            choices: [{ name: 'Yes', value: 1 }, { name: 'No, update all baselines', value: 1 }],
+                            choices: [{ name: 'Yes', value: 1 }, { name: 'No, update all baselines', value: 0 }],
                             message: 'Screens have changed, would you like to review?'
                         }
                     ]).then(({ shouldContinue }) => {
@@ -38,15 +38,18 @@ class CustomReporter {
                         }
                     });
                 }
-            });
+            })
+            .catch((err) => {
+                // do nothing
+            })
     }
 }
 
 function logBanner() {
-    console.log('\x1b[36m', '---------------------------------');
     console.log('\x1b[36m', '       Screen Check Results      ');
     console.log('\x1b[36m', '---------------------------------', '\x1b[0m');
 }
+
 function logResults(screenCheckResults) {
     screenCheckResults.forEach((result) => {
         logResultInfo(result);
@@ -74,8 +77,9 @@ function logStatus(name, status) {
     switch (status) {
         case 'fail':
         case 'obsolete': colorInt = 41; break;
-        case 'pass': colorInt = 42; break;
         case 'warn': colorInt = 43; break;
+        case 'pass': colorInt = 42; break;
+        default: colorInt = 42;
     }
     console.log(`${makeColor(colorInt)}${makeColor(1)} ${status.toUpperCase()}`, '\x1b[0m', name);
 }
@@ -94,11 +98,10 @@ function parseJestResults(jestResult) {
 }
 
 function parseScreenCheckResults(jestScreenCheckResults) {
-    return readDirectoryFiles(path.resolve(config.outputPath, './results'))
+    return readDirectoryFiles(path.resolve(config.reporterOptions.outputPath, './results'))
         .then((screenCheckFiles) => {
             return screenCheckFiles.map((filePath) => {
                 let result = JSON.parse(fs.readFileSync(filePath));
-                //console.log('Screen Check Result: ', result);
                 let testRan = !!jestScreenCheckResults[result.name];
                 if (!testRan) {
                     result.status = 'obsolete';
@@ -180,7 +183,7 @@ function promptUpdateResult(result, opts = { verbose: true }) {
 }
 
 function openImage(screenName, type) {
-    exec(`open ${config.outputPath}/screenshots/${screenName}/${type}.png`);
+    exec(`open ${config.reporterOptions.outputPath}/screenshots/${screenName}/${type}.png`);
 }
 
 function removeNonBaseline(name) {
@@ -191,7 +194,7 @@ function removeNonBaseline(name) {
 }
 
 function updateBaseline(name) {
-    const makePath = (type) => `${config.outputPath}/screenshots/${name}/${type}.png`;
+    const makePath = (type) => `${config.reporterOptions.outputPath}/screenshots/${name}/${type}.png`;
     return new Promise((resolve, reject) => {
         Promise.resolve()
             .then(() => removeScreenshot(name, 'baseline'))

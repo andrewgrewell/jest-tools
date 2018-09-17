@@ -1,6 +1,6 @@
 module.exports = {
     preset: 'react-native',
-    setupTestFrameworkScriptFile: '<rootDir>/src/setup.js',
+    setupTestFrameworkScriptFile: '<rootDir>/node_modules/jest-tools/src/setup.js',
     globals: {
         __TEST__: true
     },
@@ -18,5 +18,5 @@ module.exports = {
     //     '**/src/**/*.js',
     //     '!**/node_modules/**'
     // ],
-    reporters: ['default', '<rootDir>/src/reporter/index.js']
+    reporters: ['default', '<rootDir>/node_modules/jest-tools/src/reporter/index.js']
 };

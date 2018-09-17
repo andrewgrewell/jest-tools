@@ -1,8 +1,19 @@
 {
-    "outputPath": "/Users/osi/development/packages/jest-tools/Example/js/tests/screen-check",
+    "appiumOptions": {
+        "local": {
+            "ios": {
+                "appPath": "<rootDir>/ios/build/Build/Products/Debug-iphonesimulator/Example.app",
+                "platformVersion": "11.4"
+            },
+            "android": {
+                "appPath": "<rootDir>/ios/build/Build/Products/Debug-iphonesimulator/Example.app"
+            }
+        }
+    },
     "setupFrameworkFiles": [],
     "reporterOptions": {
-        "verbose": false
+        "verbose": false,
+        "outputPath": "/Users/agrewell/development/packages/jest-tools/Example/js/tests/screen-check"
     },
     "screenCheckerOptions": {
         "warnThreshold": 0.001,
