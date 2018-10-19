@@ -34,6 +34,11 @@ function logCommandHelp() {
 }
 
 function buildAndRun(args) {
+    /**
+     * need to manually build for ios to handle older versions:
+     * so this will need to take in a config of project, and scheme as well as device type
+     * xcodebuild -project HthuNative.xcodeproj -configuration Debug -scheme HthuNative_DEV -destination id=3787F8C6-55CD-4CF0-8A6D-AE1310D20BB0 -derivedDataPath build
+     */
     //8081 is the metro packager default, if it's running assume we already started up
     if (checkPortListening(8081)) {
         logMessage('App Already Running, Skipping Build');
@@ -98,9 +103,12 @@ function runTests() {
             }),
             stdio: 'inherit'
         };
-        var testProcess = spawn('node_modules/.bin/jest', [jestArgs], opts);
+        var testProcess = spawn('./node_modules/.bin/jest', [jestArgs], opts);
+        testProcess.on('error', function (error) {
+            console.log('Error Starting Test Process: ', error);
+        });
         testProcess.on('exit', function (data) {
-            if (!data) {
+            if (data == null) {
                 logMessage('Testing Aborted');
             }
             var code = data.toString();
