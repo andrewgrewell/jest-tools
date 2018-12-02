@@ -51,7 +51,7 @@ function logBanner() {
 }
 
 function logResults(screenCheckResults) {
-    screenCheckResults.forEach((result) => {
+    screenCheckResults.reverse().forEach((result) => {
         logResultInfo(result);
     });
 }
