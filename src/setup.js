@@ -14,7 +14,6 @@ global.describeAutomation = (suiteName, testSuite, opts) => {
 
         beforeAll(async () => {
             try {
-                console.log('Configuring Appium with: ', wdConfig.device);
                 await driver.init(wdConfig.device);
             }
             catch (err) {
