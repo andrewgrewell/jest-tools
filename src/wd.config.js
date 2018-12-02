@@ -28,6 +28,7 @@ const wdConfig = {
                 platformName: 'Android',
                 deviceName: config.appiumOptions.local.android.deviceName,
                 app: config.appiumOptions.local.android.appPath,
+                automationName: config.appiumOptions.local.android.automationName,
                 ...config.appiumOptions.capabilities.android
             };
         }

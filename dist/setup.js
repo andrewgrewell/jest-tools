@@ -37,15 +37,17 @@ global.describeAutomation = function (suiteName, testSuite, opts) {
                     switch (_context.prev = _context.next) {
                         case 0:
                             _context.prev = 0;
-                            _context.next = 3;
+
+                            console.log('Configuring Appium with: ', _wd4.default.device);
+                            _context.next = 4;
                             return driver.init(_wd4.default.device);
 
-                        case 3:
-                            _context.next = 10;
+                        case 4:
+                            _context.next = 11;
                             break;
 
-                        case 5:
-                            _context.prev = 5;
+                        case 6:
+                            _context.prev = 6;
                             _context.t0 = _context['catch'](0);
 
                             console.error('Error Initializing Driver', _context.t0);
@@ -53,16 +55,16 @@ global.describeAutomation = function (suiteName, testSuite, opts) {
 
                             error && console.error(error.value.message);
 
-                        case 10:
-                            _context.next = 12;
+                        case 11:
+                            _context.next = 13;
                             return driver.setImplicitWaitTimeout(opts.waitTimeout);
 
-                        case 12:
+                        case 13:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, undefined, [[0, 5]]);
+            }, _callee, undefined, [[0, 6]]);
         })));
 
         if (opts.resetAfterEach) {
