@@ -44,7 +44,9 @@ var defaultAppiumOptions = {
         },
         android: {
             appPath: process.cwd() + '/android/app/build/outputs/apk/app-release.apk',
-            deviceName: 'Android Emulator'
+            deviceName: 'Android Emulator',
+            automationName: 'UiAutomator2',
+            platformVersion: '8.0.0'
         },
         userInfo: {
             userId: 35,

@@ -29,8 +29,8 @@ function logCommandHelp() {
         'Usage: jest-tools [command]\n' +
         '\n' +
         'Commands:\n' +
-        '  test-ios              run end-to-end tests on iOS simulator\n' +
-        '  test-android          run end-to-end tests on Android simulator\n' +
+        '  test-ios              run end-to-end tests on iOS Simulator\n' +
+        '  test-android          run end-to-end tests on Android\n' +
         '\n'+
         'Documentation can be found at https://github.com/andrewgrewell/jest-tools\n'
     );

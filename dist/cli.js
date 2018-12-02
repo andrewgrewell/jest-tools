@@ -29,7 +29,7 @@ switch (input) {
 }
 
 function logCommandHelp() {
-    var helpMessage = 'Usage: jest-tools [command]\n' + '\n' + 'Commands:\n' + '  test-ios              run end-to-end tests on iOS simulator\n' + '  test-android          run end-to-end tests on Android simulator\n' + '\n' + 'Documentation can be found at https://github.com/andrewgrewell/jest-tools\n';
+    var helpMessage = 'Usage: jest-tools [command]\n' + '\n' + 'Commands:\n' + '  test-ios              run end-to-end tests on iOS Simulator\n' + '  test-android          run end-to-end tests on Android\n' + '\n' + 'Documentation can be found at https://github.com/andrewgrewell/jest-tools\n';
     console.log(helpMessage);
 }
 
@@ -100,7 +100,7 @@ function runTests() {
         };
         var testProcess = spawn('node_modules/.bin/jest', [jestArgs], opts);
         testProcess.on('exit', function (data) {
-            if (!data) {
+            if (data == null) {
                 logMessage('Testing Aborted');
             }
             var code = data.toString();

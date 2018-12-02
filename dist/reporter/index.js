@@ -29,14 +29,14 @@ var CustomReporter = function () {
                 logBanner();
                 logResults(screenCheckResults);
                 var nonPassingResults = filter(screenCheckResults, function (result) {
-                    return result.status !== 'pass' || result.status !== 'skipped';
+                    return result.status !== 'pass' && result.status !== 'skipped';
                 });
                 if (nonPassingResults.length) {
                     // show inquirerer prompt for non passing screen checks
                     inquirer.prompt([{
                         name: 'shouldContinue',
                         type: 'list',
-                        choices: [{ name: 'Yes', value: 1 }, { name: 'No, update all baselines', value: 1 }],
+                        choices: [{ name: 'Yes', value: 1 }, { name: 'No, update all baselines', value: 0 }],
                         message: 'Screens have changed, would you like to review?'
                     }]).then(function (_ref) {
                         var shouldContinue = _ref.shouldContinue;
