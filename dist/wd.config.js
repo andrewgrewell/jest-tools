@@ -3,6 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var config = require('./config');
 
 var wdConfig = {
@@ -25,20 +28,20 @@ var wdConfig = {
     get device() {
         switch (process.env.E2E_PLATFORM) {
             case 'ios':
-                return {
+                return _extends({
                     platformName: 'iOS',
                     deviceName: config.appiumOptions.local.ios.deviceName,
                     automationName: config.appiumOptions.local.ios.automationName,
                     platformVersion: config.appiumOptions.local.ios.platformVersion,
                     iosInstallPause: config.appiumOptions.local.ios.installPause,
                     app: config.appiumOptions.local.ios.appPath
-                };
+                }, config.appiumOptions.ios.capabilities);
             case 'android':
-                return {
+                return _extends({
                     platformName: 'Android',
                     deviceName: config.appiumOptions.local.android.deviceName,
                     app: config.appiumOptions.local.android.appPath
-                };
+                }, config.appiumOptions.android.capabilities);
         }
     },
     get userInfo() {
