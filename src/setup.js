@@ -17,7 +17,7 @@ global.describeAutomation = (suiteName, testSuite, opts) => {
                 await driver.init(wdConfig.device);
             }
             catch (err) {
-                console.error('Error Initializing Driver', 'error');
+                console.error('Error Initializing Driver', err);
                 let error = JSON.parse(err.data);
                 error && console.error(error.value.message);
             }

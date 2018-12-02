@@ -22,13 +22,13 @@ const wdConfig = {
                 platformVersion: config.appiumOptions.local.ios.platformVersion,
                 iosInstallPause: config.appiumOptions.local.ios.installPause,
                 app: config.appiumOptions.local.ios.appPath,
-                ...config.appiumOptions.ios.capabilities
+                ...config.appiumOptions.capabilities.ios
             };
             case 'android': return {
                 platformName: 'Android',
                 deviceName: config.appiumOptions.local.android.deviceName,
                 app: config.appiumOptions.local.android.appPath,
-                ...config.appiumOptions.android.capabilities
+                ...config.appiumOptions.capabilities.android
             };
         }
     },

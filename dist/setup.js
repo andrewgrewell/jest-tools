@@ -48,7 +48,7 @@ global.describeAutomation = function (suiteName, testSuite, opts) {
                             _context.prev = 5;
                             _context.t0 = _context['catch'](0);
 
-                            console.error('Error Initializing Driver', 'error');
+                            console.error('Error Initializing Driver', _context.t0);
                             error = JSON.parse(_context.t0.data);
 
                             error && console.error(error.value.message);

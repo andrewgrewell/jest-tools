@@ -1,8 +1,8 @@
 {
   "name": "jest-tools",
-  "version": "0.4.1",
+  "version": "0.6.0",
   "scripts": {
-    "build": "rm -rf dist && babel src -d dist --ignore __tests__",
+    "build": "rm -rf dist && babel src -d dist --ignore __tests__ && cp -R ./src/reporter ./dist/reporter",
     "prepublish": "npm run build"
   },
   "bin": {

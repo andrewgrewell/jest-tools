@@ -32,6 +32,10 @@ const defaultReporterOptions = {
 };
 
 const defaultAppiumOptions = {
+    capabilities: {
+        android: {},
+        ios: {}
+    },
     local: {
         url: 'localhost',
         port: 4723,
