@@ -40,22 +40,17 @@ const defaultAppiumOptions = {
         url: 'localhost',
         port: 4723,
         ios: {
-            appPath: `${process.cwd()}/ios/build/Build/Products/Debug-iphonesimulator/Example.app`,
-            installPause: 1000,
+            app: `${process.cwd()}/ios/build/Build/Products/Debug-iphonesimulator/Example.app`,
+            iosInstallPause: 1000,
             platformVersion: '11.4',
             deviceName: 'iPhone Simulator',
             automationName: 'XCUITest',
         },
         android: {
-            appPath: `${process.cwd()}/android/app/build/outputs/apk/app-release.apk`,
+            app: `${process.cwd()}/android/app/build/outputs/apk/app-release.apk`,
             deviceName: 'Android Emulator',
             automationName: 'UiAutomator2',
             platformVersion: '8.0.0'
-        },
-        userInfo: {
-            userId: 35,
-            email: 'user35@provatahealth.com',
-            password: 'Passw0rd'
         }
     },
     saucelabs: {

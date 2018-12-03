@@ -14,22 +14,16 @@ const wdConfig = {
         }
     },
     get device() {
-        switch (process.env.E2E_PLATFORM) {
+        const platform = process.env.E2E_PLATFORM;
+        const opts = config.appiumOptions.local[platform];
+        switch (platform) {
             case 'ios': return {
                 platformName: 'iOS',
-                deviceName: config.appiumOptions.local.ios.deviceName,
-                automationName: config.appiumOptions.local.ios.automationName,
-                platformVersion: config.appiumOptions.local.ios.platformVersion,
-                iosInstallPause: config.appiumOptions.local.ios.installPause,
-                app: config.appiumOptions.local.ios.appPath,
-                ...config.appiumOptions.capabilities.ios
+                ...opts
             };
             case 'android': return {
                 platformName: 'Android',
-                deviceName: config.appiumOptions.local.android.deviceName,
-                app: config.appiumOptions.local.android.appPath,
-                automationName: config.appiumOptions.local.android.automationName,
-                ...config.appiumOptions.capabilities.android
+                ...opts
             };
         }
     },
